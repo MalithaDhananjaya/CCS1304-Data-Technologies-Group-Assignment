@@ -35,6 +35,7 @@ CREATE TABLE Patient (
     address TEXT NOT NULL,
     contact_number VARCHAR(15) NOT NULL UNIQUE,
     blood_group VARCHAR(5) NOT NULL
+    emergency_contact VARCHAR(15)
 );
 
 -- 4. APPOINTMENT TABLE
