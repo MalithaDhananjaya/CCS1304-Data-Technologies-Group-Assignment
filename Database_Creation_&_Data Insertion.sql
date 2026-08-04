@@ -136,12 +136,6 @@ INSERT INTO Doctor (doctor_name, qualification, specialization, contact_number, 
 ('Dr. Kamalanathan S', 'MBBS, MS (Orth)', 'Orthopedic Surgeon', '0771234564', 3800.00, 4),
 ('Dr. Priyantha Jayasuriya', 'MBBS, MD (Radiology)', 'Radiologist', '0771234565', 3000.00, 5);
 
--- Update Head Doctors for Departments
-UPDATE Department SET head_doctor_id = 1 WHERE department_id = 1;
-UPDATE Department SET head_doctor_id = 2 WHERE department_id = 2;
-UPDATE Department SET head_doctor_id = 3 WHERE department_id = 3;
-UPDATE Department SET head_doctor_id = 4 WHERE department_id = 4;
-UPDATE Department SET head_doctor_id = 5 WHERE department_id = 5;
 
 -- Insert Patients (Min 10)
 INSERT INTO Patient (full_name, dob, gender, address, contact_number, blood_group, emergency_contact) VALUES
@@ -166,7 +160,7 @@ INSERT INTO Room (room_category, bed_number, is_available) VALUES
 ('General Ward', 'GW-202', TRUE);
 
 -- Insert Appointments (Min 15)
-INSERT INTO Appointment (patient_id, doctor_id, appointment_date, appointment_time, appointment_status, consultation_room) VALUES
+INSERT INTO Appointment (patient_id, doctor_id, appointment_date, appointment_time, status, consultation_room) VALUES
 (1, 1, '2026-07-01', '09:00:00', 'Completed', 'Room 101'),
 (1, 2, '2026-07-05', '10:00:00', 'Completed', 'Room 102'),
 (2, 1, '2026-07-01', '09:30:00', 'Completed', 'Room 101'),
