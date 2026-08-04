@@ -1,8 +1,3 @@
-
--- SmartCare Hospital Management System Database Script
--- Tasks: Task 04  & Task 05 
-
-
 DROP DATABASE IF EXISTS SmartCareDB;
 CREATE DATABASE SmartCareDB;
 USE SmartCareDB;
@@ -35,7 +30,6 @@ CREATE TABLE Patient (
     address TEXT NOT NULL,
     contact_number VARCHAR(15) NOT NULL UNIQUE,
     blood_group VARCHAR(5) NOT NULL
-    emergency_contact VARCHAR(15)
 );
 
 -- 4. APPOINTMENT TABLE
@@ -52,7 +46,7 @@ CREATE TABLE Appointment (
     CONSTRAINT unique_doctor_schedule UNIQUE (doctor_id, appointment_date, appointment_time)
 );
 
--- 5. ROOM CATEGORY TABLE (Added to match ERD)
+-- 5. ROOM CATEGORY TABLE
 CREATE TABLE Room_Category (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     category_name VARCHAR(50) NOT NULL UNIQUE,
@@ -96,7 +90,7 @@ CREATE TABLE Treatment (
 CREATE TABLE Lab_Test (
     lab_test_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
-    doctor_id INT NOT NULL, -- Added to match Doctor -> Requests -> Lab_Test relationship
+    doctor_id INT NOT NULL,
     test_name VARCHAR(100) NOT NULL,
     test_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     test_result TEXT,
@@ -117,9 +111,11 @@ CREATE TABLE Billing (
     FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) ON DELETE CASCADE
 );
 
--- Task 05: Data Insertion (Minimum Requirements Satisfied)
+-- ========================================================
+-- Task 05: Data Insertion
+-- ========================================================
 
--- Insert Departments 
+-- Insert Departments
 INSERT INTO Department (dept_name, location) VALUES
 ('Cardiology', 'Building A - Floor 1'),
 ('Neurology', 'Building A - Floor 2'),
@@ -135,19 +131,18 @@ INSERT INTO Doctor (doctor_name, qualification, specialization, contact_number, 
 ('Dr. Kamalanathan S', 'MBBS, MS (Orth)', 'Orthopedic Surgeon', '0771234564', 3800.00, 4),
 ('Dr. Priyantha Jayasuriya', 'MBBS, MD (Radiology)', 'Radiologist', '0771234565', 3000.00, 5);
 
-
--- Insert Patients 
-INSERT INTO Patient (full_name, dob, gender, address, contact_number, blood_group, emergency_contact) VALUES
-('Kasun Kalhara', '1990-05-12', 'Male', 'Colombo 03', '0711111101', 'A+', '0719999901'),
-('Ruwanthi De Silva', '1985-08-23', 'Female', 'Kandy', '0711111102', 'B+', '0719999902'),
-('Saman Kumara', '1978-11-04', 'Male', 'Galle', '0711111103', 'O+', '0719999903'),
-('Dilani Perera', '1995-02-15', 'Female', 'Negombo', '0711111104', 'AB+', '0719999904'),
-('Mohomed Rizwan', '2001-09-30', 'Male', 'Gampaha', '0711111105', 'O-', '0719999905'),
-('Chathuri Senanayake', '1992-12-10', 'Female', 'Kurunegala', '0711111106', 'A-', '0719999906'),
-('Nuwan Pradeep', '1988-04-18', 'Male', 'Kalutara', '0711111107', 'B-', '0719999907'),
-('Tharushi Jayawardena', '1998-07-07', 'Female', 'Ratnapura', '0711111108', 'AB-', '0719999908'),
-('Mahesh Wickramasinghe', '1965-01-25', 'Male', 'Matara', '0711111109', 'O+', '0719999909'),
-('Kavindi Bandara', '2005-03-14', 'Female', 'Anuradhapura', '0711111110', 'A+', '0719999910');
+-- Insert Patients
+INSERT INTO Patient (full_name, dob, gender, address, contact_number, blood_group) VALUES
+('Kasun Kalhara', '1990-05-12', 'Male', 'Colombo 03', '0711111101', 'A+'),
+('Ruwanthi De Silva', '1985-08-23', 'Female', 'Kandy', '0711111102', 'B+'),
+('Saman Kumara', '1978-11-04', 'Male', 'Galle', '0711111103', 'O+'),
+('Dilani Perera', '1995-02-15', 'Female', 'Negombo', '0711111104', 'AB+'),
+('Mohomed Rizwan', '2001-09-30', 'Male', 'Gampaha', '0711111105', 'O-'),
+('Chathuri Senanayake', '1992-12-10', 'Female', 'Kurunegala', '0711111106', 'A-'),
+('Nuwan Pradeep', '1988-04-18', 'Male', 'Kalutara', '0711111107', 'B-'),
+('Tharushi Jayawardena', '1998-07-07', 'Female', 'Ratnapura', '0711111108', 'AB-'),
+('Mahesh Wickramasinghe', '1965-01-25', 'Male', 'Matara', '0711111109', 'O+'),
+('Kavindi Bandara', '2005-03-14', 'Female', 'Anuradhapura', '0711111110', 'A+');
 
 -- Insert Room Categories
 INSERT INTO Room_Category (category_name, daily_rate) VALUES
@@ -164,7 +159,7 @@ INSERT INTO Room (category_id, bed_number, room_status) VALUES
 (3, 'GW-201', 'Available'),
 (3, 'GW-202', 'Available');
 
--- Insert Appointments 
+-- Insert Appointments
 INSERT INTO Appointment (patient_id, doctor_id, appointment_date, appointment_time, status, consultation_room) VALUES
 (1, 1, '2026-07-01', '09:00:00', 'Completed', 'Room 101'),
 (1, 2, '2026-07-05', '10:00:00', 'Completed', 'Room 102'),
@@ -187,22 +182,26 @@ INSERT INTO Admission (patient_id, room_id, admission_date, discharge_date, admi
 (3, 1, '2026-07-01 10:00:00', NULL, 'Admitted'),
 (5, 3, '2026-07-02 11:30:00', NULL, 'Admitted');
 
+-- Insert Treatments
+INSERT INTO Treatment (patient_id, doctor_id, diagnosis, prescription, treatment_date) VALUES
+(1, 1, 'Hypertension', 'Amlodipine 5mg daily', '2026-07-01 09:30:00'),
+(3, 3, 'Severe Asthma', 'Salbutamol Inhaler, Prednisolone', '2026-07-02 10:30:00');
+
 -- Insert Lab Tests
-INSERT INTO Lab_Test (patient_id, test_name, test_date, test_result, technician_name, test_status) VALUES
-(1, 'ECG Report', '2026-07-01 09:45:00', 'Normal Sinus Rhythm', 'Sunil Shantha', 'Completed'),
-(3, 'Blood Count (FBC)', '2026-07-01 11:00:00', 'WBC slightly elevated', 'Kamal Perera', 'Completed'),
-(5, 'MRI Brain Scan', '2026-07-02 14:00:00', 'Pending evaluation', 'Nimali Fonseka', 'Pending');
+INSERT INTO Lab_Test (patient_id, doctor_id, test_name, test_date, test_result, technician_name, test_status) VALUES
+(1, 1, 'ECG Report', '2026-07-01 09:45:00', 'Normal Sinus Rhythm', 'Sunil Shantha', 'Completed'),
+(3, 1, 'Blood Count (FBC)', '2026-07-01 11:00:00', 'WBC slightly elevated', 'Kamal Perera', 'Completed'),
+(5, 2, 'MRI Brain Scan', '2026-07-02 14:00:00', 'Pending evaluation', 'Nimali Fonseka', 'Pending');
 
--- Insert Billing Records 
-INSERT INTO Billing (patient_id, bill_date, consultation_charges, room_charges, lab_charges, medicine_charges, total_amount, payment_status, payment_method) VALUES
-(1, '2026-07-01 10:30:00', 3500.00, 0.00, 1500.00, 2000.00, 7000.00, 'Paid', 'Cash'),
-(2, '2026-07-01 10:00:00', 3500.00, 0.00, 0.00, 1200.00, 4700.00, 'Paid', 'Card'),
-(3, '2026-07-02 12:00:00', 2500.00, 15000.00, 3000.00, 4500.00, 25000.00, 'Unpaid', 'Cash'),
-(4, '2026-07-02 11:45:00', 3800.00, 0.00, 0.00, 800.00, 4600.00, 'Paid', 'Online'),
-(5, '2026-07-03 09:15:00', 3000.00, 8000.00, 12000.00, 3500.00, 26500.00, 'Unpaid', 'Insurance'),
-(6, '2026-07-03 09:30:00', 3500.00, 0.00, 0.00, 500.00, 4000.00, 'Paid', 'Cash'),
-(7, '2026-07-04 14:30:00', 4000.00, 0.00, 0.00, 1500.00, 5500.00, 'Unpaid', 'Card'),
-(8, '2026-07-04 15:30:00', 2500.00, 0.00, 2000.00, 1000.00, 5500.00, 'Paid', 'Cash'),
-(9, '2026-07-05 09:30:00', 3800.00, 0.00, 0.00, 2200.00, 6000.00, 'Paid', 'Online'),
-(10, '2026-07-05 11:00:00', 3000.00, 0.00, 1800.00, 1200.00, 6000.00, 'Unpaid', 'Cash');
-
+-- Insert Billing Records
+INSERT INTO Billing (patient_id, bill_date, total_amount, payment_status, payment_method) VALUES
+(1, '2026-07-01 10:30:00', 7000.00, 'Paid', 'Cash'),
+(2, '2026-07-01 10:00:00', 4700.00, 'Paid', 'Card'),
+(3, '2026-07-02 12:00:00', 25000.00, 'Unpaid', 'Cash'),
+(4, '2026-07-02 11:45:00', 4600.00, 'Paid', 'Online'),
+(5, '2026-07-03 09:15:00', 26500.00, 'Unpaid', 'Insurance'),
+(6, '2026-07-03 09:30:00', 4000.00, 'Paid', 'Cash'),
+(7, '2026-07-04 14:30:00', 5500.00, 'Unpaid', 'Card'),
+(8, '2026-07-04 15:30:00', 5500.00, 'Paid', 'Cash'),
+(9, '2026-07-05 09:30:00', 6000.00, 'Paid', 'Online'),
+(10, '2026-07-05 11:00:00', 6000.00, 'Unpaid', 'Cash');
