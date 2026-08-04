@@ -1,7 +1,7 @@
--- ========================================================
+
 -- SmartCare Hospital Management System Database Script
--- Tasks: Task 04 (Database Creation) & Task 05 (Data Insertion)
--- ========================================================
+-- Tasks: Task 04  & Task 05 
+
 
 DROP DATABASE IF EXISTS SmartCareDB;
 CREATE DATABASE SmartCareDB;
@@ -117,11 +117,9 @@ CREATE TABLE Billing (
     FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) ON DELETE CASCADE
 );
 
--- ========================================================
 -- Task 05: Data Insertion (Minimum Requirements Satisfied)
--- ========================================================
 
--- Insert Departments (Min 5)
+-- Insert Departments 
 INSERT INTO Department (dept_name, location) VALUES
 ('Cardiology', 'Building A - Floor 1'),
 ('Neurology', 'Building A - Floor 2'),
@@ -129,7 +127,7 @@ INSERT INTO Department (dept_name, location) VALUES
 ('Orthopedics', 'Building B - Floor 2'),
 ('Radiology', 'Building C - Ground Floor');
 
--- Insert Doctors (Min 5)
+-- Insert Doctors
 INSERT INTO Doctor (doctor_name, qualification, specialization, contact_number, consultation_fee, department_id) VALUES
 ('Dr. Sunil Perera', 'MBBS, MD (Cardiology)', 'Cardiologist', '0771234561', 3500.00, 1),
 ('Dr. Nimal Fernando', 'MBBS, MD (Neurology)', 'Neurologist', '0771234562', 4000.00, 2),
@@ -138,7 +136,7 @@ INSERT INTO Doctor (doctor_name, qualification, specialization, contact_number, 
 ('Dr. Priyantha Jayasuriya', 'MBBS, MD (Radiology)', 'Radiologist', '0771234565', 3000.00, 5);
 
 
--- Insert Patients (Min 10)
+-- Insert Patients 
 INSERT INTO Patient (full_name, dob, gender, address, contact_number, blood_group, emergency_contact) VALUES
 ('Kasun Kalhara', '1990-05-12', 'Male', 'Colombo 03', '0711111101', 'A+', '0719999901'),
 ('Ruwanthi De Silva', '1985-08-23', 'Female', 'Kandy', '0711111102', 'B+', '0719999902'),
@@ -160,7 +158,7 @@ INSERT INTO Room (room_category, bed_number, is_available) VALUES
 ('General Ward', 'GW-201', TRUE),
 ('General Ward', 'GW-202', TRUE);
 
--- Insert Appointments (Min 15)
+-- Insert Appointments 
 INSERT INTO Appointment (patient_id, doctor_id, appointment_date, appointment_time, status, consultation_room) VALUES
 (1, 1, '2026-07-01', '09:00:00', 'Completed', 'Room 101'),
 (1, 2, '2026-07-05', '10:00:00', 'Completed', 'Room 102'),
@@ -189,7 +187,7 @@ INSERT INTO Lab_Test (patient_id, test_name, test_date, test_result, technician_
 (3, 'Blood Count (FBC)', '2026-07-01 11:00:00', 'WBC slightly elevated', 'Kamal Perera', 'Completed'),
 (5, 'MRI Brain Scan', '2026-07-02 14:00:00', 'Pending evaluation', 'Nimali Fonseka', 'Pending');
 
--- Insert Billing Records (Min 10)
+-- Insert Billing Records 
 INSERT INTO Billing (patient_id, bill_date, consultation_charges, room_charges, lab_charges, medicine_charges, total_amount, payment_status, payment_method) VALUES
 (1, '2026-07-01 10:30:00', 3500.00, 0.00, 1500.00, 2000.00, 7000.00, 'Paid', 'Cash'),
 (2, '2026-07-01 10:00:00', 3500.00, 0.00, 0.00, 1200.00, 4700.00, 'Paid', 'Card'),
