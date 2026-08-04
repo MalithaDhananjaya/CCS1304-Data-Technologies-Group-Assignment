@@ -149,14 +149,20 @@ INSERT INTO Patient (full_name, dob, gender, address, contact_number, blood_grou
 ('Mahesh Wickramasinghe', '1965-01-25', 'Male', 'Matara', '0711111109', 'O+', '0719999909'),
 ('Kavindi Bandara', '2005-03-14', 'Female', 'Anuradhapura', '0711111110', 'A+', '0719999910');
 
+-- Insert Room Categories
+INSERT INTO Room_Category (category_name, daily_rate) VALUES
+('ICU', 15000.00),
+('Private Room', 8000.00),
+('General Ward', 3000.00);
+
 -- Insert Rooms
-INSERT INTO Room (room_category, bed_number, is_available) VALUES
-('ICU', 'ICU-01', FALSE),
-('ICU', 'ICU-02', TRUE),
-('Private Room', 'PR-101', FALSE),
-('Private Room', 'PR-102', TRUE),
-('General Ward', 'GW-201', TRUE),
-('General Ward', 'GW-202', TRUE);
+INSERT INTO Room (category_id, bed_number, room_status) VALUES
+(1, 'ICU-01', 'Occupied'),
+(1, 'ICU-02', 'Available'),
+(2, 'PR-101', 'Occupied'),
+(2, 'PR-102', 'Available'),
+(3, 'GW-201', 'Available'),
+(3, 'GW-202', 'Available');
 
 -- Insert Appointments 
 INSERT INTO Appointment (patient_id, doctor_id, appointment_date, appointment_time, status, consultation_room) VALUES
