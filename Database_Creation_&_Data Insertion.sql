@@ -11,8 +11,7 @@ USE SmartCareDB;
 CREATE TABLE Department (
     department_id INT AUTO_INCREMENT PRIMARY KEY,
     dept_name VARCHAR(100) NOT NULL UNIQUE,
-    location VARCHAR(100) NOT NULL,
-    head_doctor_id INT NULL
+    location VARCHAR(100) NOT NULL
 );
 
 -- 2. DOCTOR TABLE
@@ -27,11 +26,6 @@ CREATE TABLE Doctor (
     FOREIGN KEY (department_id) REFERENCES Department(department_id) ON DELETE CASCADE
 );
 
--- Add Foreign Key for Department Head Doctor
-ALTER TABLE Department 
-ADD CONSTRAINT fk_dept_head 
-FOREIGN KEY (head_doctor_id) REFERENCES Doctor(doctor_id) ON DELETE SET NULL;
-
 -- 3. PATIENT TABLE
 CREATE TABLE Patient (
     patient_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,8 +34,7 @@ CREATE TABLE Patient (
     gender ENUM('Male', 'Female', 'Other') NOT NULL,
     address TEXT NOT NULL,
     contact_number VARCHAR(15) NOT NULL UNIQUE,
-    blood_group VARCHAR(5) NOT NULL,
-    emergency_contact VARCHAR(15) NOT NULL
+    blood_group VARCHAR(5) NOT NULL
 );
 
 -- 4. APPOINTMENT TABLE
@@ -51,22 +44,30 @@ CREATE TABLE Appointment (
     doctor_id INT NOT NULL,
     appointment_date DATE NOT NULL,
     appointment_time TIME NOT NULL,
-    appointment_status ENUM('Scheduled', 'Completed', 'Cancelled') DEFAULT 'Scheduled',
+    status ENUM('Scheduled', 'Completed', 'Cancelled') DEFAULT 'Scheduled',
     consultation_room VARCHAR(20) NOT NULL,
     FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) ON DELETE CASCADE,
     FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id) ON DELETE CASCADE,
     CONSTRAINT unique_doctor_schedule UNIQUE (doctor_id, appointment_date, appointment_time)
 );
 
--- 5. ROOM TABLE
-CREATE TABLE Room (
-    room_id INT AUTO_INCREMENT PRIMARY KEY,
-    room_category ENUM('General Ward', 'Private Room', 'ICU') NOT NULL,
-    bed_number VARCHAR(10) NOT NULL UNIQUE,
-    is_available BOOLEAN DEFAULT TRUE
+-- 5. ROOM CATEGORY TABLE (Added to match ERD)
+CREATE TABLE Room_Category (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL UNIQUE,
+    daily_rate DECIMAL(10, 2) NOT NULL CHECK (daily_rate >= 0)
 );
 
--- 6. ADMISSION TABLE
+-- 6. ROOM TABLE
+CREATE TABLE Room (
+    room_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT NOT NULL,
+    bed_number VARCHAR(10) NOT NULL UNIQUE,
+    room_status ENUM('Available', 'Occupied', 'Maintenance') DEFAULT 'Available',
+    FOREIGN KEY (category_id) REFERENCES Room_Category(category_id) ON DELETE CASCADE
+);
+
+-- 7. ADMISSION TABLE
 CREATE TABLE Admission (
     admission_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
@@ -78,40 +79,37 @@ CREATE TABLE Admission (
     FOREIGN KEY (room_id) REFERENCES Room(room_id) ON DELETE CASCADE
 );
 
--- 7. TREATMENT TABLE
+-- 8. TREATMENT TABLE
 CREATE TABLE Treatment (
     treatment_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
     doctor_id INT NOT NULL,
     diagnosis TEXT NOT NULL,
     prescription TEXT NOT NULL,
-    treatment_notes TEXT,
     treatment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) ON DELETE CASCADE,
     FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id) ON DELETE CASCADE
 );
 
--- 8. LAB TEST TABLE
+-- 9. LAB TEST TABLE
 CREATE TABLE Lab_Test (
     lab_test_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
+    doctor_id INT NOT NULL, -- Added to match Doctor -> Requests -> Lab_Test relationship
     test_name VARCHAR(100) NOT NULL,
     test_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     test_result TEXT,
     technician_name VARCHAR(100) NOT NULL,
     test_status ENUM('Pending', 'Completed') DEFAULT 'Pending',
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) ON DELETE CASCADE
+    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) ON DELETE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES Doctor(doctor_id) ON DELETE CASCADE
 );
 
--- 9. BILLING TABLE
+-- 10. BILLING TABLE
 CREATE TABLE Billing (
     bill_id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT NOT NULL,
     bill_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    consultation_charges DECIMAL(10, 2) DEFAULT 0.00 CHECK (consultation_charges >= 0),
-    room_charges DECIMAL(10, 2) DEFAULT 0.00 CHECK (room_charges >= 0),
-    lab_charges DECIMAL(10, 2) DEFAULT 0.00 CHECK (lab_charges >= 0),
-    medicine_charges DECIMAL(10, 2) DEFAULT 0.00 CHECK (medicine_charges >= 0),
     total_amount DECIMAL(10, 2) NOT NULL CHECK (total_amount >= 0),
     payment_status ENUM('Paid', 'Unpaid') DEFAULT 'Unpaid',
     payment_method ENUM('Cash', 'Card', 'Online', 'Insurance') DEFAULT 'Cash',
