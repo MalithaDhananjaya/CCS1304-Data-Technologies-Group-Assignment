@@ -111,9 +111,7 @@ CREATE TABLE Billing (
     FOREIGN KEY (patient_id) REFERENCES Patient(patient_id) ON DELETE CASCADE
 );
 
--- ========================================================
 -- Task 05: Data Insertion
--- ========================================================
 
 -- Insert Departments
 INSERT INTO Department (dept_name, location) VALUES
