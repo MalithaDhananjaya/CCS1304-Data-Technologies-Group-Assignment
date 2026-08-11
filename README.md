@@ -107,37 +107,50 @@ All tables use `PRIMARY KEY`, `FOREIGN KEY`, `NOT NULL`, `UNIQUE`, and `CHECK` c
 ### Setup
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/smartcare-hospital-management-system.git
-cd smartcare-hospital-management-system
+git clone https://github.com/MalithaDhananjaya/CCS1304-Data-Technologies-Group-Assignment.git
+cd CCS1304-Data-Technologies-Group-Assignment
 
-# 2. Run the SQL script in MySQL Workbench or CLI
-mysql -u root -p < smartcare_hospital.sql
+# 2. Create the database, tables & sample data
+mysql -u root -p < database_schema.sql
+
+# 3. Run views, stored procedures, functions & triggers
+mysql -u root -p < Script/views.sql
+mysql -u root -p < Script/sp_AdmitPatient.sql
+mysql -u root -p < Script/sp_GetDoctorAppointments.sql
+mysql -u root -p < Script/sp_ScheduleAppointment_DischargePatient.sql
+mysql -u root -p < Script/fn_CalculateAge.sql
+mysql -u root -p < Script/fn_GetTotalPaidByPatient.sql
+mysql -u root -p < Script/triggers.sql
+
+# 4. Run any sample query
+mysql -u root -p SmartCareDB < Script/Queries_1.sql
 ```
 
-The script will:
+`database_schema.sql` will:
 1. Drop and recreate the `SmartCareDB` database
 2. Create all 12 tables with constraints
 3. Insert sample data (10 patients, 5 doctors, 5 departments, 15 appointments, 10 bills)
-4. Create views, stored procedures, functions, and triggers
 
 ---
 
-## 🔍 Sample Queries Included
+## 🔍 Sample Queries (`Script/Queries_1.sql` – `Queries_10.sql`)
 
-- Display all patient details
-- List doctors grouped by department
-- Appointments scheduled for a specific doctor
-- Patients admitted to ICU rooms
-- Display unpaid bills
-- Calculate total revenue generated
-- Find the most frequently visited doctor
-- Patients with multiple appointments
-- Lab tests completed within a date range
-- Display current room availability
+| # | Query |
+|---|---|
+| 1 | Display all patient details |
+| 2 | List doctors grouped by department |
+| 3 | Appointments scheduled for a specific doctor |
+| 4 | Patients admitted to ICU rooms |
+| 5 | Display unpaid bills |
+| 6 | Calculate total revenue generated |
+| 7 | Find the most frequently visited doctor |
+| 8 | Patients with multiple appointments |
+| 9 | Lab tests completed within a date range |
+| 10 | Display current room availability |
 
 ---
 
-## 👁️ Views
+## 👁️ Views (`Script/views.sql`)
 
 | View | Description |
 |---|---|
@@ -146,22 +159,21 @@ The script will:
 
 ## ⚡ Stored Procedures
 
-| Procedure | Description |
-|---|---|
-| `sp_ScheduleAppointment` | Schedules a new appointment |
-| `sp_DischargePatient` | Discharges a patient and frees up the room |
-| `sp_GetDoctorAppointments` | Fetches all upcoming scheduled consultations for a doctor |
-| `sp_AdmitPatient` | Admits a patient and marks the room as `Occupied` |
+| Procedure | File | Description |
+|---|---|---|
+| `sp_ScheduleAppointment` | `sp_ScheduleAppointment_DischargePatient.sql` | Schedules a new appointment |
+| `sp_DischargePatient` | `sp_ScheduleAppointment_DischargePatient.sql` | Discharges a patient and frees up the room |
+| `sp_GetDoctorAppointments` | `sp_GetDoctorAppointments.sql` | Fetches all upcoming scheduled consultations for a doctor |
+| `sp_AdmitPatient` | `sp_AdmitPatient.sql` | Admits a patient and marks the room as `Occupied` |
 
 ## 🧠 User-Defined Functions
 
-| Function | Description |
-|---|---|
-| `fn_CalculateAdmissionCharge` | Calculates total admission charge based on days stayed × daily rate |
-| `fn_GetPatientAge` | Returns a patient's current age from their date of birth |
-| `fn_GetTotalPaidByPatient` | Returns the total paid bill amount for a given patient |
+| Function | File | Description |
+|---|---|---|
+| `fn_CalculateAge` | `fn_CalculateAge.sql` | Returns a patient's current age calculated from their date of birth |
+| `fn_GetTotalPaidByPatient` | `fn_GetTotalPaidByPatient.sql` | Returns the total paid bill amount for a given patient |
 
-## 🔔 Triggers
+## 🔔 Triggers (`Script/triggers.sql`)
 
 | Trigger | Event | Action |
 |---|---|---|
@@ -171,17 +183,21 @@ The script will:
 
 ---
 
-## 📁 Suggested Repository Structure
+## 📁 Repository Structure
 
 ```
-smartcare-hospital-management-system/
+CCS1304-Data-Technologies-Group-Assignment/
 ├── README.md
-├── smartcare_hospital.sql          # Full DDL + DML + views/procedures/functions/triggers
-├── docs/
-│   ├── ERD.png                     # Entity Relationship Diagram
-│   └── DATA_TECHNOLOGIES_Group_Assignment.pdf
-└── queries/
-    └── sample_queries.sql
+├── database_schema.sql                              # Tables, constraints, sample data
+└── Script/
+    ├── Queries_1.sql ... Queries_10.sql              # Task 06 – SQL queries
+    ├── views.sql                                     # Task 07 – Views
+    ├── sp_AdmitPatient.sql                           # Task 08 – Stored procedure
+    ├── sp_GetDoctorAppointments.sql                  # Task 08 – Stored procedure
+    ├── sp_ScheduleAppointment_DischargePatient.sql   # Task 08 – Stored procedures
+    ├── fn_CalculateAge.sql                           # Task 09 – Function
+    ├── fn_GetTotalPaidByPatient.sql                  # Task 09 – Function
+    └── triggers.sql                                  # Task 10 – Triggers
 ```
 
 ---
