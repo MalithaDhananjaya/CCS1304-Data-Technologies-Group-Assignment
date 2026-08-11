@@ -1,103 +1,209 @@
-<div align="center">
-
 # 🏥 SmartCare Hospital Management System
-**CCS1304 — Data Technologies Group Assignment**
 
-[![Institution](https://img.shields.io/badge/Institution-Sri_Lanka_Technology_Campus_(SLTC)-0056b3?style=for-the-badge&logo=academic-pages)](https://sltc.ac.lk/)
-[![Course](https://img.shields.io/badge/Course-CCS1304__Data__Technologies-e65100?style=for-the-badge)](https://sltc.ac.lk/)
-[![Database](https://img.shields.io/badge/Database-MySQL_8.0-00758f?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+A centralized **Relational Database Management System (RDBMS)** built with **MySQL** for SmartCare Hospital — a private healthcare institution in Sri Lanka. The system replaces manual, spreadsheet-based record-keeping with a normalized, constraint-driven database that automates appointments, room/bed allocation, treatments, lab tests, and billing.
 
-<p align="center">
-  A centralized Relational Database Management System (RDBMS) developed to automate hospital workflows, streamline patient admissions, prevent appointment overlaps, and eliminate data redundancy.
-</p>
-
----
-
-</div>
-
-## 👥 Group Members
-
-| Name | Student ID | Role |
-| :--- | :---: | :---: |
-| **M.G. Hirusha Praveen Sulakshana** | `CIT-25-02-0334` | Member |
-| **Malitha Herath** | `CIT-25-02-0003` | Member |
-| **Manula Gunawardhana** | `CIT-25-02-0393` | Member |
-| **Tharusha Nuwanga** | `CIT-25-02-0288` | Member |
+> Group assignment for **CCS1304 – Data Technologies**
 
 ---
 
 ## 📌 Project Overview
 
-SmartCare Hospital operates across multiple specialized departments including **Cardiology, Pediatrics, Neurology, Orthopedics, and Radiology**. This system replaces manual record-keeping with an enterprise-ready MySQL database.
+SmartCare Hospital provides medical services across multiple departments (Cardiology, Pediatrics, Neurology, Orthopedics, Radiology). Manual record-keeping caused:
 
-### Key Features & Technical Highlights:
-* **Database Normalization:** Fully normalized up to **Third Normal Form (3NF)** to ensure zero redundancy and data integrity.
-* **Automated Room Management:** Real-time dynamic updates between `Available` and `Occupied` statuses via Triggers and Stored Procedures.
-* **Schedule Collision Prevention:** Strict constraints and triggers preventing duplicate appointment slots for doctors.
-* **Advanced RDBMS Architecture:** Integrated Views, Functions, Stored Procedures, and Triggers to support clinical and administrative reporting.
+- Data duplication
+- Appointment clashes
+- Room allocation delays
+- Billing errors
 
----
-
-## 🗄️ Database Architecture
-
-### Relational Schema Summary
-1. **Department (1 : N) Doctor:** A single department employs multiple medical specialists.
-2. **Doctor (1 : N) Appointment (N : 1) Patient:** Maps doctor availability with patient consultations.
-3. **Patient (1 : N) Admission (N : 1) Room:** Tracks inpatient bed allocation and room stays.
-4. **Room_Category (1 : N) Room:** Categorizes rooms (ICU, Private Room, General Ward) and tracks daily rates.
-5. **Doctor (1 : N) Treatment / Lab_Test (N : 1) Patient:** Logs diagnoses, prescriptions, and lab diagnostic workflows.
-6. **Patient (1 : N) Billing:** Centralized financial, invoice, and payment tracking.
+This project designs and implements a MySQL database that ensures **data integrity**, **reduces redundancy**, and enables **quick reporting** for hospital administration.
 
 ---
 
-## 💻 Database Objects & Features
+## 👥 Team Members
 
-### 1. Core Database Schema
-* Contains strict relational enforcement: `PRIMARY KEY`, `FOREIGN KEY`, `NOT NULL`, `UNIQUE`, and `CHECK` constraints.
-* **Tables:** `Department`, `Doctor`, `Patient`, `Appointment`, `Room_Category`, `Room`, `Admission`, `Treatment`, `Medicine`, `Prescription_Medicine`, `Lab_Test`, and `Billing`.
-
-### 2. Views (`Task 07`)
-* `vw_Patient_Medical_Summary`: Aggregates medical history, diagnoses, and prescriptions per patient.
-* `vw_Active_Admissions`: Real-time operational view of current inpatients and occupied rooms.
-
-### 3. Stored Procedures (`Task 08`)
-* `sp_ScheduleAppointment`: Validates doctor schedules and reserves appointment slots.
-* `sp_DischargePatient`: Automates patient discharge timestamps and releases room availability.
-
-### 4. User-Defined Functions (`Task 09`)
-* `fn_CalculateAdmissionCharge`: Dynamically calculates total stay cost based on room rate and elapsed days.
-* `fn_GetPatientAge`: Computes patient age in years based on birthdate.
-
-### 5. Triggers (`Task 10`)
-* `trg_AfterAdmissionInsert`: Automatically updates room status to `Occupied` upon patient admission.
-* `trg_BeforeAppointmentInsert`: Restricts booking appointments on past dates.
+| Name | Student ID |
+|---|---|
+| M.G. Hirusha Praveen Sulakshana | CIT-25-02-0334 |
+| Malitha Herath | CIT-25-02-0003 |
+| Manula Gunawardhana | CIT-25-02-0393 |
+| Tharusha Nuwanga | CIT-25-02-0288 |
 
 ---
 
-## 🛠️ Installation & Setup
+## ⚙️ Tech Stack
 
-### 1. Clone the Repository
+- **Database:** MySQL 8.0
+- **Tool:** MySQL Workbench / SQL client
+- **Concepts applied:** ER Modeling, Normalization (1NF–3NF), DDL/DML, Views, Stored Procedures, User-Defined Functions, Triggers
+
+---
+
+## 🧩 Operational Requirements
+
+- Efficient tracking of patient profiles, doctor availability, and department details
+- Prevention of overlapping doctor appointment schedules
+- Dynamic room availability tracking upon patient admission and discharge
+- Accurate automated record management for treatments, lab tests, and billing
+
+## 📐 System Assumptions
+
+1. **Department & Doctor:** One department employs multiple doctors, but each doctor belongs to only one department.
+2. **Appointments:** A doctor can consult multiple patients but cannot have two appointments at the exact same date/time.
+3. **Medical Records:** Treatments and lab tests must be prescribed/requested by a registered doctor.
+4. **Room Allocation:** A room holds one patient per bed; status toggles between `Available` and `Occupied`.
+
+---
+
+## 🗂️ Entity Relationship Summary
+
+| Relationship | Description |
+|---|---|
+| `Department (1) : (N) Doctor` | One department employs many doctors |
+| `Doctor (1) : (N) Appointment (N) : (1) Patient` | Doctors and patients connect via appointments |
+| `Patient (1) : (N) Admission (N) : (1) Room` | Tracks patient stays and room allocation |
+| `Room_Category (1) : (N) Room` | Categorizes rooms (ICU, Private, General) |
+| `Doctor (1) : (N) Treatment / Lab_Test (N) : (1) Patient` | Prescriptions and lab test tracking |
+| `Patient (1) : (N) Billing` | Captures financial records and payments |
+
+**Core Entities:** `Department`, `Doctor`, `Patient`, `Appointment`, `Room_Category`, `Room`, `Admission`, `Treatment`, `Medicine`, `Prescription_Medicine`, `Lab_Test`, `Billing`
+
+---
+
+## 🧮 Normalization
+
+- **1NF:** All attributes are atomic; repeating groups (e.g., appointments) moved into separate tables with unique primary keys.
+- **2NF:** Eliminated partial dependencies — e.g., split Doctor and Department details into separate tables.
+- **3NF:** Removed transitive dependencies — e.g., `daily_rate` moved from `Room` into `Room_Category`, referenced via `category_id`.
+
+---
+
+## 🏗️ Database Schema (Tables)
+
+| # | Table | Purpose |
+|---|---|---|
+| 1 | `Department` | Hospital departments |
+| 2 | `Doctor` | Doctor profiles, linked to a department |
+| 3 | `Patient` | Patient demographic & contact info |
+| 4 | `Appointment` | Doctor–patient consultations (unique per doctor/date/time) |
+| 5 | `Room_Category` | Room types (ICU, Private, General Ward) with daily rate |
+| 6 | `Room` | Individual rooms/beds, linked to a category |
+| 7 | `Admission` | Patient admission & discharge tracking |
+| 8 | `Treatment` | Diagnoses & prescriptions issued by doctors |
+| 9 | `Medicine` | Medicine catalog |
+| 10 | `Prescription_Medicine` | Medicines linked to a treatment |
+| 11 | `Lab_Test` | Lab tests requested by doctors |
+| 12 | `Billing` | Patient billing & payment records |
+
+All tables use `PRIMARY KEY`, `FOREIGN KEY`, `NOT NULL`, `UNIQUE`, and `CHECK` constraints (e.g., `consultation_fee > 0`, `total_amount >= 0`).
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- MySQL Server 8.0+
+- MySQL Workbench (or any SQL client)
+
+### Setup
 ```bash
-git clone [https://github.com/MalithaDhananjaya/CCS1304-Data-Technologies-Group-Assignment.git](https://github.com/MalithaDhananjaya/CCS1304-Data-Technologies-Group-Assignment.git)
-cd CCS1304-Data-Technologies-Group-Assignment
+# 1. Clone the repository
+git clone https://github.com/<your-username>/smartcare-hospital-management-system.git
+cd smartcare-hospital-management-system
 
+# 2. Run the SQL script in MySQL Workbench or CLI
+mysql -u root -p < smartcare_hospital.sql
+```
 
-### 2. Import Database Scripts
-Launch MySQL Workbench or your preferred SQL client.
+The script will:
+1. Drop and recreate the `SmartCareDB` database
+2. Create all 12 tables with constraints
+3. Insert sample data (10 patients, 5 doctors, 5 departments, 15 appointments, 10 bills)
+4. Create views, stored procedures, functions, and triggers
 
-Open and execute the provided .sql file:
-Create DataBase/Database_Creation_&_Data_Insertion.sql
+---
 
-### 3. Verification Query
-Run the following SQL snippet to verify successful setup:
-USE SmartCareDB;
-SELECT * FROM Patient;
+## 🔍 Sample Queries Included
 
-## 📚 References & Academic Resources
-Silberschatz, A., Korth, H. F., & Sudarshan, S. — Database System Concepts
+- Display all patient details
+- List doctors grouped by department
+- Appointments scheduled for a specific doctor
+- Patients admitted to ICU rooms
+- Display unpaid bills
+- Calculate total revenue generated
+- Find the most frequently visited doctor
+- Patients with multiple appointments
+- Lab tests completed within a date range
+- Display current room availability
 
-Elmasri, R., & Navathe, S. B. — Fundamentals of Database Systems
+---
 
-MySQL 8.0 Reference Manual
+## 👁️ Views
 
-GeeksforGeeks DBMS Tutorials
+| View | Description |
+|---|---|
+| `vw_Patient_Medical_Summary` | Combines patient details, diagnoses, and prescriptions for quick clinical lookup |
+| `vw_Active_Admissions` | Real-time list of occupied rooms and currently admitted patients |
+
+## ⚡ Stored Procedures
+
+| Procedure | Description |
+|---|---|
+| `sp_ScheduleAppointment` | Schedules a new appointment |
+| `sp_DischargePatient` | Discharges a patient and frees up the room |
+| `sp_GetDoctorAppointments` | Fetches all upcoming scheduled consultations for a doctor |
+| `sp_AdmitPatient` | Admits a patient and marks the room as `Occupied` |
+
+## 🧠 User-Defined Functions
+
+| Function | Description |
+|---|---|
+| `fn_CalculateAdmissionCharge` | Calculates total admission charge based on days stayed × daily rate |
+| `fn_GetPatientAge` | Returns a patient's current age from their date of birth |
+| `fn_GetTotalPaidByPatient` | Returns the total paid bill amount for a given patient |
+
+## 🔔 Triggers
+
+| Trigger | Event | Action |
+|---|---|---|
+| `trg_AfterAdmissionInsert` | `AFTER INSERT` on `Admission` | Sets room status to `Occupied` |
+| `trg_After_Discharge_Update` | `AFTER UPDATE` on `Admission` | Sets room status back to `Available` |
+| `trg_BeforeAppointmentInsert` | `BEFORE INSERT` on `Appointment` | Blocks scheduling appointments in the past |
+
+---
+
+## 📁 Suggested Repository Structure
+
+```
+smartcare-hospital-management-system/
+├── README.md
+├── smartcare_hospital.sql          # Full DDL + DML + views/procedures/functions/triggers
+├── docs/
+│   ├── ERD.png                     # Entity Relationship Diagram
+│   └── DATA_TECHNOLOGIES_Group_Assignment.pdf
+└── queries/
+    └── sample_queries.sql
+```
+
+---
+
+## ✅ Conclusion
+
+The SmartCare Hospital Management System addresses the limitations of manual record-keeping. Normalizing the schema to 3NF eliminated redundancy, while SQL constraints ensured relational data integrity. Triggers and stored procedures automate room management and admission tracking, providing a scalable and accurate foundation for hospital operations.
+
+---
+
+## 📚 References
+
+- [W3Schools MySQL](https://www.w3schools.com/MYSQL/default.asp)
+- [GeeksforGeeks – Enhanced ER Model](https://www.geeksforgeeks.org/dbms/enhanced-er-model/)
+- [GeeksforGeeks – Relational Algebra](https://www.geeksforgeeks.org/dbms/introduction-of-relational-algebra-in-dbms/)
+- [MySQL 8.0 Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/)
+- *Database System Concepts* — Silberschatz, Korth, Sudarshan
+- *Fundamentals of Database Systems* — Elmasri, Navathe
+- *Murach's MySQL* — Joel Murach
+
+---
+
+## 📄 License
+
+This project was created for academic purposes as part of the CCS1304 Data Technologies module.
